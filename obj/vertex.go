@@ -5,14 +5,14 @@ import (
 	"fmt"
 	"io"
 	"strconv"
+
+	"github.com/oakmound/oak/alg/floatgeom"
 )
 
 // Vertex represents a OBJ Vertex
 type Vertex struct {
 	Index int64
-	X     float64
-	Y     float64
-	Z     float64
+	floatgeom.Point3
 }
 
 func parseVertex(items []string) (v Vertex, err error) {
@@ -21,19 +21,22 @@ func parseVertex(items []string) (v Vertex, err error) {
 		return
 	}
 
+	var x, y, z float64
 	//TODO: verify each field, merge errors
-	if v.X, err = strconv.ParseFloat(items[0], 64); err != nil {
+	if x, err = strconv.ParseFloat(items[0], 64); err != nil {
 		err = errors.New("unable to parse X coordinate")
 		return
 	}
-	if v.Y, err = strconv.ParseFloat(items[1], 64); err != nil {
+	if y, err = strconv.ParseFloat(items[1], 64); err != nil {
 		err = errors.New("unable to parse Y coordinate")
 		return
 	}
-	if v.Z, err = strconv.ParseFloat(items[2], 64); err != nil {
+	if z, err = strconv.ParseFloat(items[2], 64); err != nil {
 		err = errors.New("unable to parse Z coordinate")
 		return
 	}
+
+	v.Point3 = floatgeom.Point3{x, y, z}
 
 	return
 }
