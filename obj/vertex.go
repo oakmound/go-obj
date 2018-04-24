@@ -42,6 +42,6 @@ func parseVertex(items []string) (v Vertex, err error) {
 }
 
 func writeVertex(v *Vertex, w io.Writer) error {
-	_, err := w.Write([]byte(fmt.Sprintf("%f %f %f", v.X, v.Y, v.Z)))
+	_, err := w.Write([]byte(fmt.Sprintf("%f %f %f", v.X(), v.Y(), v.Z())))
 	return err
 }

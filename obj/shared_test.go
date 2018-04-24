@@ -35,14 +35,14 @@ func compareVertices(v1 *Vertex, v2 *Vertex) bool {
 	if v1 == nil && v2 != nil || v1 != nil && v2 == nil {
 		return false
 	}
-	return v1 == nil && v2 == nil || v1.Index == v2.Index && v1.X == v2.X && v1.Y == v2.Y && v1.Z == v2.Z
+	return v1 == nil && v2 == nil || v1.Index == v2.Index && v1.Point3 == v2.Point3
 }
 
 func compareNormals(n1 *Normal, n2 *Normal) bool {
 	if n1 == nil && n2 != nil || n1 != nil && n2 == nil {
 		return false
 	}
-	return n1 == nil && n2 == nil || n1.Index == n2.Index && n1.X == n2.X && n1.Y == n2.Y && n1.Z == n2.Z
+	return n1 == nil && n2 == nil || n1.Index == n2.Index && n1.Point3 == n2.Point3
 }
 
 func compareTextureCoords(t1 *TextureCoord, t2 *TextureCoord) bool {
@@ -66,7 +66,7 @@ func (v *Vertex) String() string {
 		return "Vertex{nil}"
 	}
 
-	return fmt.Sprintf("Vertex{%d %f %f %f}", v.Index, v.X, v.Y, v.Z)
+	return fmt.Sprintf("Vertex{%d %f %f %f}", v.Index, v.X(), v.Y(), v.Z())
 }
 
 func (n *Normal) String() string {
@@ -74,7 +74,7 @@ func (n *Normal) String() string {
 		return "Normal{nil}"
 	}
 
-	return fmt.Sprintf("Normal{%d %f %f %f}", n.Index, n.X, n.Y, n.Z)
+	return fmt.Sprintf("Normal{%d %f %f %f}", n.Index, n.X(), n.Y(), n.Z())
 }
 
 func (t *TextureCoord) String() string {

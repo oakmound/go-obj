@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"fmt"
 	"testing"
+
+	"github.com/oakmound/oak/alg/floatgeom"
 )
 
 var nNullIndex = int64(-1)
@@ -13,13 +15,13 @@ var normalReadTests = []struct {
 	Error  string
 	Normal Normal
 }{
-	{stringList{"1", "1", "1" /*-----------------------*/}, "" /*-------------------------------*/, Normal{nNullIndex, 1, 1, 1}},
-	{stringList{"1", "1" /*----------------------------*/}, "item length is incorrect" /**/, Normal{nNullIndex, 0, 0, 0}},
-	{stringList{"1.0000", "-1.0000", "-1.0000" /*------*/}, "" /*-------------------------------*/, Normal{nNullIndex, 1, -1, -1}},
-	{stringList{"0.9999", "-1.0000", "-1.0001" /*------*/}, "" /*-------------------------------*/, Normal{nNullIndex, 0.9999, -1, -1.0001}},
-	{stringList{"x", "-1.000000", "-1.000001" /*-------*/}, "unable to parse X coordinate" /*---*/, Normal{nNullIndex, 0, 0, 0}},
-	{stringList{"1.0000", "y", "-1.0001" /*------------*/}, "unable to parse Y coordinate" /*---*/, Normal{nNullIndex, 1, 0, 0}},
-	{stringList{"1.0000", "1", "z" /*------------------*/}, "unable to parse Z coordinate" /*---*/, Normal{nNullIndex, 1, 1, 0}},
+	{stringList{"1", "1", "1" /*-----------------------*/}, "" /*-------------------------------*/, Normal{nNullIndex, floatgeom.Point3{1, 1, 1}}},
+	{stringList{"1", "1" /*----------------------------*/}, "item length is incorrect" /**/, Normal{nNullIndex, floatgeom.Point3{0, 0, 0}}},
+	{stringList{"1.0000", "-1.0000", "-1.0000" /*------*/}, "" /*-------------------------------*/, Normal{nNullIndex, floatgeom.Point3{1, -1, -1}}},
+	{stringList{"0.9999", "-1.0000", "-1.0001" /*------*/}, "" /*-------------------------------*/, Normal{nNullIndex, floatgeom.Point3{0.9999, -1, -1.0001}}},
+	{stringList{"x", "-1.000000", "-1.000001" /*-------*/}, "unable to parse X coordinate" /*---*/, Normal{nNullIndex, floatgeom.Point3{0, 0, 0}}},
+	{stringList{"1.0000", "y", "-1.0001" /*------------*/}, "unable to parse Y coordinate" /*---*/, Normal{nNullIndex, floatgeom.Point3{1, 0, 0}}},
+	{stringList{"1.0000", "1", "z" /*------------------*/}, "unable to parse Z coordinate" /*---*/, Normal{nNullIndex, floatgeom.Point3{1, 1, 0}}},
 }
 
 func TestReadNormal(t *testing.T) {
@@ -33,7 +35,7 @@ func TestReadNormal(t *testing.T) {
 			failed := false
 			failed = failed || test.Error == "" && err != nil
 			failed = failed || err != nil && test.Error != err.Error()
-			failed = failed || (n.X != test.Normal.X || n.Y != test.Normal.Y || n.Z != test.Normal.Z)
+			failed = failed || test.Normal.Point3 != n.Point3
 
 			if failed {
 				t.Errorf("got %v, '%v', expected %v, '%v'", n, err, test.Normal, test.Error)
@@ -47,9 +49,9 @@ var normalWriteTests = []struct {
 	Output string
 	Error  string
 }{
-	{Normal{nNullIndex, 1, 1, 1}, "1.0000 1.0000 1.0000", ""},
-	{Normal{nNullIndex, -1, 1, 1}, "-1.0000 1.0000 1.0000", ""},
-	{Normal{nNullIndex, -1.0001, 0.9999, 1}, "-1.0001 0.9999 1.0000", ""},
+	{Normal{nNullIndex, floatgeom.Point3{1, 1, 1}}, "1.0000 1.0000 1.0000", ""},
+	{Normal{nNullIndex, floatgeom.Point3{-1, 1, 1}}, "-1.0000 1.0000 1.0000", ""},
+	{Normal{nNullIndex, floatgeom.Point3{-1.0001, 0.9999, 1}}, "-1.0001 0.9999 1.0000", ""},
 }
 
 func TestWriteNormal(t *testing.T) {

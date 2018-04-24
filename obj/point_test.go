@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"fmt"
 	"testing"
+
+	"github.com/oakmound/oak/alg/floatgeom"
 )
 
 var pointReadTests = []struct {
@@ -11,20 +13,20 @@ var pointReadTests = []struct {
 	Error string
 	Point Point
 }{
-	{"1/3/2" /*-*/, "" /*----------*/, Point{&Vertex{1, 9, 9, 9}, &Normal{2, 1, 3, 4}, &TextureCoord{3, 9, 1, 2}}},
-	{"1//2" /*--*/, "" /*----------*/, Point{&Vertex{1, 9, 9, 9}, &Normal{2, 1, 3, 4}, nil}},
-	{"1/3" /*---*/, "" /*----------*/, Point{&Vertex{1, 9, 9, 9}, nil, &TextureCoord{3, 9, 1, 2}}},
-	{"1" /*-----*/, "" /*----------*/, Point{&Vertex{1, 9, 9, 9}, nil, nil}},
-	{"-2/-2/-4" /*-*/, "" /*----------*/, Point{&Vertex{1, 9, 9, 9}, &Normal{2, 1, 3, 4}, &TextureCoord{3, 9, 1, 2}}},
+	{"1/3/2" /*-*/, "" /*----------*/, Point{&Vertex{1, floatgeom.Point3{9, 9, 9}}, &Normal{2, floatgeom.Point3{1, 3, 4}}, &TextureCoord{3, 9, 1, 2}}},
+	{"1//2" /*--*/, "" /*----------*/, Point{&Vertex{1, floatgeom.Point3{9, 9, 9}}, &Normal{2, floatgeom.Point3{1, 3, 4}}, nil}},
+	{"1/3" /*---*/, "" /*----------*/, Point{&Vertex{1, floatgeom.Point3{9, 9, 9}}, nil, &TextureCoord{3, 9, 1, 2}}},
+	{"1" /*-----*/, "" /*----------*/, Point{&Vertex{1, floatgeom.Point3{9, 9, 9}}, nil, nil}},
+	{"-2/-2/-4" /*-*/, "" /*----------*/, Point{&Vertex{1, floatgeom.Point3{9, 9, 9}}, &Normal{2, floatgeom.Point3{1, 3, 4}}, &TextureCoord{3, 9, 1, 2}}},
 }
 
 func TestReadPoint(t *testing.T) {
 
 	var dummyObject Object
 	dummyObject.Vertices = make([]Vertex, 2)
-	dummyObject.Vertices[0] = Vertex{1, 9, 9, 9}
+	dummyObject.Vertices[0] = Vertex{1, floatgeom.Point3{9, 9, 9}}
 	dummyObject.Normals = make([]Normal, 5)
-	dummyObject.Normals[1] = Normal{2, 1, 3, 4}
+	dummyObject.Normals[1] = Normal{2, floatgeom.Point3{1, 3, 4}}
 	dummyObject.Textures = make([]TextureCoord, 4)
 	dummyObject.Textures[2] = TextureCoord{3, 9, 1, 2}
 
@@ -50,10 +52,10 @@ var pointWriteTests = []struct {
 	Output string
 	Error  string
 }{
-	{Point{&Vertex{1, 0, 0, 0}, nil, nil}, "1", ""},
-	{Point{&Vertex{1, 0, 0, 0}, &Normal{2, 0, 0, 0}, nil}, "1//2", ""},
-	{Point{&Vertex{1, 0, 0, 0}, &Normal{2, 0, 0, 0}, &TextureCoord{3, 0, 0, 0}}, "1/3/2", ""},
-	{Point{&Vertex{1, 0, 0, 0}, nil, &TextureCoord{3, 0, 0, 0}}, "1/3", ""},
+	{Point{&Vertex{1, floatgeom.Point3{0, 0, 0}}, nil, nil}, "1", ""},
+	{Point{&Vertex{1, floatgeom.Point3{0, 0, 0}}, &Normal{2, floatgeom.Point3{0, 0, 0}}, nil}, "1//2", ""},
+	{Point{&Vertex{1, floatgeom.Point3{0, 0, 0}}, &Normal{2, floatgeom.Point3{0, 0, 0}}, &TextureCoord{3, 0, 0, 0}}, "1/3/2", ""},
+	{Point{&Vertex{1, floatgeom.Point3{0, 0, 0}}, nil, &TextureCoord{3, 0, 0, 0}}, "1/3", ""},
 }
 
 func TestWritePoint(t *testing.T) {

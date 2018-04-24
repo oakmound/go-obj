@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"fmt"
 	"testing"
+
+	"github.com/oakmound/oak/alg/floatgeom"
 )
 
 var fNullIndex = int64(-1)
@@ -13,16 +15,16 @@ var faceReadTests = []struct {
 	Error string
 	Face  Face
 }{
-	{stringList{"12//1"}, "", Face{fNullIndex, []*Point{&Point{&Vertex{12, 1, 1, 1}, &Normal{1, 1, 2, 3}, nil}}}},
+	{stringList{"12//1"}, "", Face{fNullIndex, []*Point{&Point{&Vertex{12, floatgeom.Point3{1, 1, 1}}, &Normal{1, floatgeom.Point3{1, 2, 3}}, nil}}}},
 }
 
 func TestReadFace(t *testing.T) {
 
 	var dummyObject Object
 	dummyObject.Vertices = make([]Vertex, 14)
-	dummyObject.Vertices[11] = Vertex{12, 1, 1, 1}
+	dummyObject.Vertices[11] = Vertex{12, floatgeom.Point3{1, 1, 1}}
 	dummyObject.Normals = make([]Normal, 3)
-	dummyObject.Normals[0] = Normal{1, 1, 2, 3}
+	dummyObject.Normals[0] = Normal{1, floatgeom.Point3{1, 2, 3}}
 
 	for _, test := range faceReadTests {
 		name := fmt.Sprintf("parseFace(%s)", test.Items)
@@ -59,12 +61,12 @@ var faceWriteTests = []struct {
 		Face: Face{fNullIndex,
 			[]*Point{
 				&Point{
-					Vertex: &Vertex{12, 0, 0, 0},
-					Normal: &Normal{2, 0, 0, 0},
+					Vertex: &Vertex{12, floatgeom.Point3{0, 0, 0}},
+					Normal: &Normal{2, floatgeom.Point3{0, 0, 0}},
 				},
 				&Point{
-					Vertex: &Vertex{13, 0, 0, 0},
-					Normal: &Normal{2, 0, 0, 0},
+					Vertex: &Vertex{13, floatgeom.Point3{0, 0, 0}},
+					Normal: &Normal{2, floatgeom.Point3{0, 0, 0}},
 				},
 			},
 		},
